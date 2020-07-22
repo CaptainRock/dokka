@@ -9,15 +9,18 @@ apply(from = "../template.root.gradle.kts")
 
 dependencies {
     implementation(kotlin("stdlib"))
+    testImplementation(kotlin("test-junit"))
 }
 
 tasks.withType<DokkaTask> {
     dokkaSourceSets {
         configureEach {
-            moduleDisplayName = "Basic Project"
+            moduleDisplayName.set("Basic Project")
             logger.lifecycle("configured: ${this.name}")
+        }
+
+        register("myTest") {
+            kotlinSourceSet(kotlin.sourceSets["test"])
         }
     }
 }
-
-buildDir.resolve("")

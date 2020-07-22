@@ -1,5 +1,3 @@
-import org.jetbrains.dokka.gradle.configureWithKotlinSourceSet
-
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.dokka")
