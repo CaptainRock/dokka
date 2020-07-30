@@ -10,6 +10,7 @@ import org.jetbrains.dokka.model.DEnumEntry
 import org.jetbrains.dokka.pages.*
 import org.jetbrains.dokka.plugability.DokkaContext
 import org.jetbrains.dokka.transformers.pages.PageTransformer
+import com.fasterxml.jackson.module.kotlin.*
 
 
 object SearchPageInstaller : PageTransformer {
@@ -34,12 +35,22 @@ object SearchPageInstaller : PageTransformer {
 }
 
 object NavigationPageInstaller : PageTransformer {
-    override fun invoke(input: RootPageNode) = input.modified(
-        children = input.children + NavigationPage(
-            input.children.filterIsInstance<ContentPage>().single()
-                .let(NavigationPageInstaller::visit)
+    private val mapper = jacksonObjectMapper()
+
+    override fun invoke(input: RootPageNode): RootPageNode {
+        val nodes = input.children.filterIsInstance<ContentPage>().single()
+            .let(NavigationPageInstaller::visit)
+
+        val page = RendererSpecificResourcePage(
+            name = "scripts/navigationPane.js",
+            children = emptyList(),
+            strategy = RenderingStrategy.Write("const navigationPane = " + mapper.writeValueAsString(nodes))
         )
-    )
+
+        return input.modified(
+            children = input.children + page
+        )
+    }
 
     private fun visit(page: ContentPage): NavigationNode =
         NavigationNode(
@@ -76,6 +87,7 @@ object StyleAndScriptsAppender : PageTransformer {
                 "scripts/platformContentHandler.js",
                 "scripts/sourceset_dependencies.js",
                 "scripts/clipboard.js",
+                "scripts/navigationPane.js",
                 "styles/jetbrains-mono.css"
             )
         )
