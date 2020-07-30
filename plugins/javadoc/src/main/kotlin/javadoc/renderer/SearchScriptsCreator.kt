@@ -1,26 +1,21 @@
 package javadoc.renderer
 
-import javadoc.location.JavadocLocationProvider
 import javadoc.pages.*
 import javadoc.renderer.SearchRecord.Companion.allTypes
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.base.renderers.sourceSets
+import org.jetbrains.dokka.base.resolvers.local.LocationProvider
 import org.jetbrains.dokka.links.DRI
 import org.jetbrains.dokka.model.Documentable
-import org.jetbrains.dokka.model.InheritedFunction
-import org.jetbrains.dokka.model.doc.Index
-import org.jetbrains.dokka.model.properties.WithExtraProperties
 import org.jetbrains.dokka.pages.*
 import org.jetbrains.dokka.utilities.formatToEndWithHtml
-import org.jetbrains.dokka.utilities.htmlEscape
-import java.lang.StringBuilder
 
-class SearchScriptsCreator(private val locationProvider: JavadocLocationProvider) {
+class SearchScriptsCreator(private val locationProvider: LocationProvider) {
 
     fun invoke(input: RootPageNode): List<RendererSpecificPage> {
         val data = when (input) {
             is JavadocModulePageNode -> processModules(listOf(input))
-            else -> SearchData()
+            else -> processModules(input.children.filterIsInstance<JavadocModulePageNode>())
         }
         val serializer = SearchRecordJsonSerializer()
 

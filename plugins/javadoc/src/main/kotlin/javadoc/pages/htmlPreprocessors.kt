@@ -3,8 +3,6 @@ package javadoc.pages
 import org.jetbrains.dokka.pages.*
 import org.jetbrains.dokka.transformers.pages.PageTransformer
 
-val preprocessors = listOf(ResourcesInstaller, TreeViewInstaller, AllClassesPageInstaller)
-
 object ResourcesInstaller : PageTransformer {
     override fun invoke(input: RootPageNode): RootPageNode = input.modified(
         children = input.children +

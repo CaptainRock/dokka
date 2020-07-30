@@ -29,12 +29,12 @@ class JavadocModulePageNode(
     override val children: List<PageNode>,
     override val dri: Set<DRI>
 ) :
-    RootPageNode(),
+    ModulePageNode(name, content, null, children, emptyList()),
     JavadocPageNode {
 
     override val documentable: Documentable? = null
     override val embeddedResources: List<String> = emptyList()
-    override fun modified(name: String, children: List<PageNode>): RootPageNode =
+    override fun modified(name: String, children: List<PageNode>): ModulePageNode =
         JavadocModulePageNode(name, content, children, dri)
 
     override fun modified(
@@ -43,23 +43,22 @@ class JavadocModulePageNode(
         dri: Set<DRI>,
         embeddedResources: List<String>,
         children: List<PageNode>
-    ): ContentPage = JavadocModulePageNode(name, content as JavadocContentNode, children, dri)
+    ): ModulePageNode = JavadocModulePageNode(name, content as JavadocContentNode, children, dri)
 }
 
 class JavadocPackagePageNode(
     override val name: String,
     override val content: JavadocContentNode,
     override val dri: Set<DRI>,
-
     override val documentable: Documentable? = null,
     override val children: List<PageNode> = emptyList(),
     override val embeddedResources: List<String> = listOf()
-) : JavadocPageNode {
+) : JavadocPageNode, PackagePageNode(name, content, dri, documentable, children, embeddedResources) {
 
     override fun modified(
         name: String,
         children: List<PageNode>
-    ): PageNode = JavadocPackagePageNode(
+    ): PackagePageNode = JavadocPackagePageNode(
         name,
         content,
         dri,
@@ -74,7 +73,7 @@ class JavadocPackagePageNode(
         dri: Set<DRI>,
         embeddedResources: List<String>,
         children: List<PageNode>
-    ): ContentPage =
+    ): PackagePageNode =
         JavadocPackagePageNode(
             name,
             content as JavadocContentNode,

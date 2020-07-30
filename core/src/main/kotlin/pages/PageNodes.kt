@@ -60,7 +60,7 @@ abstract class RootPageNode: PageNode {
     ): RootPageNode
 }
 
-class ModulePageNode(
+open class ModulePageNode(
     override val name: String,
     override val content: ContentNode,
     override val documentable: Documentable?,
@@ -83,7 +83,7 @@ class ModulePageNode(
         else ModulePageNode(name, content, documentable, children, embeddedResources)
 }
 
-class PackagePageNode(
+open class PackagePageNode(
     override val name: String,
     override val content: ContentNode,
     override val dri: Set<DRI>,
@@ -105,7 +105,7 @@ class PackagePageNode(
         else PackagePageNode(name, content, dri, documentable, children, embeddedResources)
 }
 
-class ClasslikePageNode(
+open class ClasslikePageNode(
     override val name: String,
     override val content: ContentNode,
     override val dri: Set<DRI>,
@@ -127,7 +127,7 @@ class ClasslikePageNode(
         else ClasslikePageNode(name, content, dri, documentable, children, embeddedResources)
 }
 
-class MemberPageNode(
+open class MemberPageNode(
     override val name: String,
     override val content: ContentNode,
     override val dri: Set<DRI>,
@@ -150,7 +150,7 @@ class MemberPageNode(
 }
 
 
-class MultimoduleRootPageNode(
+open class MultimoduleRootPageNode(
     override val name: String,
     override val dri: Set<DRI>,
     override val content: ContentNode,

@@ -1,16 +1,13 @@
 package javadoc
 
+import javadoc.location.JavadocLocationProvider
 import javadoc.pages.JavadocPageNode
-import javadoc.pages.preprocessors
 import javadoc.renderer.JavadocContentToTemplateMapTranslator
 import org.jetbrains.dokka.DokkaConfigurationImpl
 import org.jetbrains.dokka.javadoc.JavadocPlugin
 import org.jetbrains.dokka.model.withDescendants
 import org.jetbrains.dokka.pages.RootPageNode
-import org.jetbrains.dokka.plugability.DokkaContext
-import org.jetbrains.dokka.plugability.DokkaPlugin
-import org.jetbrains.dokka.plugability.plugin
-import org.jetbrains.dokka.plugability.querySingle
+import org.jetbrains.dokka.plugability.*
 import org.jetbrains.dokka.testApi.testRunner.AbstractCoreTest
 
 internal abstract class AbstractJavadocTemplateMapTest : AbstractCoreTest() {
@@ -31,8 +28,8 @@ internal abstract class AbstractJavadocTemplateMapTest : AbstractCoreTest() {
 
         val translator: JavadocContentToTemplateMapTranslator by lazy {
             val locationProvider = context.plugin<JavadocPlugin>()
-                .querySingle { locationProviderFactory }
-                .getLocationProvider(rootPageNode)
+                .querySingle { dokkaBasePlugin.locationProviderFactory }
+                .getLocationProvider(rootPageNode) as JavadocLocationProvider
 
             JavadocContentToTemplateMapTranslator(locationProvider, context)
         }
@@ -64,6 +61,7 @@ internal abstract class AbstractJavadocTemplateMapTest : AbstractCoreTest() {
     ) {
         testInline(query, configuration, pluginOverrides = pluginsOverride) {
             renderingStage = { rootPageNode, dokkaContext ->
+                val preprocessors = dokkaContext.plugin<JavadocPlugin>().query { javadocPreprocessors }
                 val transformedRootPageNode = preprocessors.fold(rootPageNode) { acc, pageTransformer ->
                     pageTransformer(acc)
                 }
