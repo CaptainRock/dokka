@@ -196,4 +196,51 @@ class GradleDokkaSourceSetBuilderTest {
         )
     }
 
+    @Test
+    fun reportUndocumented() {
+        val sourceSet = GradleDokkaSourceSetBuilder("", project)
+        assertEquals(
+            DokkaDefaults.reportUndocumented, sourceSet.build().reportUndocumented,
+            "Expected default value for ${GradleDokkaSourceSetBuilder::reportUndocumented.name}"
+        )
+
+        sourceSet.reportUndocumented.set(!DokkaDefaults.reportUndocumented)
+        assertEquals(
+            !DokkaDefaults.reportUndocumented, sourceSet.build().reportUndocumented,
+            "Expected flipped value for ${GradleDokkaSourceSetBuilder::reportUndocumented.name}"
+        )
+    }
+
+    @Test
+    fun jdkVersion() {
+        val sourceSet = GradleDokkaSourceSetBuilder("", project)
+        assertEquals(
+            DokkaDefaults.jdkVersion, sourceSet.build().jdkVersion,
+            "Expected default value for ${GradleDokkaSourceSetBuilder::jdkVersion.name}"
+        )
+
+        sourceSet.jdkVersion.set(DokkaDefaults.jdkVersion + 1)
+        assertEquals(
+            DokkaDefaults.jdkVersion + 1, sourceSet.build().jdkVersion,
+            "Expected increased value for ${GradleDokkaSourceSetBuilder::jdkVersion.name}"
+        )
+    }
+
+    @Test
+    fun sourceLinks() {
+        val sourceSet = GradleDokkaSourceSetBuilder("", project)
+        assertEquals(emptySet(), sourceSet.build().sourceLinks, "Expected no default source links")
+
+        sourceSet.sourceLinks.add(
+            GradleSourceLinkBuilder(project).apply {
+                this.lineSuffix by "ls1"
+                this.path by "p1"
+                this.url by "u1"
+            })
+
+        sourceSet.sourceLink {
+            it.lineSuffix by ""
+        }
+
+    }
 }
