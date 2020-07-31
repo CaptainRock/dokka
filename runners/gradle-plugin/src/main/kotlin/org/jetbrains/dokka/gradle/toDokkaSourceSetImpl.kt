@@ -38,7 +38,9 @@ private fun GradleDokkaSourceSetBuilder.moduleNameOrDefault(): String {
 }
 
 private fun GradleDokkaSourceSetBuilder.displayNameOrDefault(): String {
-    return displayName.getSafe() ?: name.substringBeforeLast("Main", platform.getSafe().toString())
+    return displayName.getSafe() ?: name.substringBeforeLast(
+        "Main", platform.getSafe()?.toString() ?: name
+    )
 }
 
 private fun GradleDokkaSourceSetBuilder.externalDocumentationLinksWithDefaults(): Set<ExternalDocumentationLinkImpl> {

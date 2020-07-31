@@ -221,9 +221,6 @@ open class GradleDokkaSourceSetBuilder constructor(
     }
 }
 
-fun GradleDokkaSourceSetBuilder.dependsOn(sourceSet: KotlinModelSourceSet) {
-    dependsOn(DokkaSourceSetID(sourceSet.name))
-}
 
 fun GradleDokkaSourceSetBuilder.dependsOn(sourceSet: KotlinSourceSet) {
     dependsOn(DokkaSourceSetID(sourceSet.name))
